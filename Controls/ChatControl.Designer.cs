@@ -36,33 +36,36 @@ partial class ChatControl
         // txtLog
         // 
         txtLog.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        txtLog.Font = new Font("Roboto", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        txtLog.Location = new Point(18, 18);
+        txtLog.Font = new Font("RobotoMono Nerd Font", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+        txtLog.Location = new Point(3, 3);
         txtLog.Multiline = true;
         txtLog.Name = "txtLog";
         txtLog.ReadOnly = true;
-        txtLog.Size = new Size(1017, 487);
+        txtLog.Size = new Size(1044, 512);
         txtLog.TabIndex = 0;
         // 
         // txtUserInput
         // 
-        txtUserInput.Font = new Font("Roboto", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        txtUserInput.Location = new Point(18, 521);
+        txtUserInput.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+        txtUserInput.Font = new Font("RobotoMono Nerd Font", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+        txtUserInput.Location = new Point(3, 522);
         txtUserInput.Multiline = true;
         txtUserInput.Name = "txtUserInput";
-        txtUserInput.Size = new Size(893, 78);
+        txtUserInput.Size = new Size(908, 93);
         txtUserInput.TabIndex = 1;
         // 
         // btnSend
         // 
-        btnSend.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        btnSend.Location = new Point(917, 521);
+        btnSend.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        btnSend.FlatStyle = FlatStyle.System;
+        btnSend.Font = new Font("RobotoMono Nerd Font", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+        btnSend.Location = new Point(917, 522);
         btnSend.Name = "btnSend";
-        btnSend.Size = new Size(118, 78);
+        btnSend.Size = new Size(130, 93);
         btnSend.TabIndex = 2;
         btnSend.Text = "Send";
         btnSend.UseVisualStyleBackColor = true;
-        btnSend.Click += btnSend_Click;
+        btnSend.Click += BtnSend_Click;
         // 
         // ChatControl
         // 

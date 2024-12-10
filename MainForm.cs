@@ -1,17 +1,21 @@
 ﻿using CraftAiTools.Controls;
+using CraftAiTools.Helpers;
 using CraftAiTools.Models;
 
-using LLama;
-using LLama.Common;
-
 namespace CraftAiTools;
+
 public partial class MainForm : Form
 {
+    private UserControl? currentUserControl = null;
+
     public MainForm()
     {
         InitializeComponent();
 
-        ScanModels();
+        // Load Models From Disk
+        FileHelpers.ScanModels(Globals.ModelsPath);
+
+        // Load Models In ComboBox
         LoadModels();
     }
 
@@ -23,57 +27,10 @@ public partial class MainForm : Form
             CB_Models.Items.Add(model.Name ?? "");
     }
 
-    private static void ScanModels()
-    {
-        if (Directory.Exists(Globals.ModelsPath))
-        {
-            // Scan The Models
-            string[] files = Directory.GetFiles(Globals.ModelsPath, "*.gguf", SearchOption.AllDirectories);
-
-            // Clear The Pevious Models
-            Globals.Models.Clear();
-
-            foreach (string file in files)
-            {
-                Globals.Models.Add(new LLamaModel
-                {
-                    Name = Path.GetFileNameWithoutExtension(file),
-                    Path = file
-                });
-            }
-        }
-        else
-        {
-            MessageBox.Show("Directory not found: " + Globals.ModelsPath);
-        }
-    }
-
-    private void MainForm_Load(object sender, EventArgs e)
-    {
-        LoadUserControl(new ChatControl());
-    }
-
-    private void LoadUserControl(UserControl userControl)
-    {
-        Panel_Main.Controls.Clear();
-        userControl.Dock = DockStyle.Fill;
-        Panel_Main.Controls.Add(userControl);
-    }
-
-    private void TSB_Chat_Click(object sender, EventArgs e)
-    {
-        LoadUserControl(new ChatControl());
-    }
-
-    private void TSB_Image_Click(object sender, EventArgs e)
-    {
-        LoadUserControl(new ImageControl());
-    }
-
-    private void TSB_Code_Click(object sender, EventArgs e)
-    {
-        LoadUserControl(new CodeControl());
-    }
+    private void MainForm_Load(object sender, EventArgs e) => LoadUserControl(new ChatControl());
+    private void TSB_Chat_Click(object sender, EventArgs e) => LoadUserControl(new ChatControl());
+    private void TSB_Image_Click(object sender, EventArgs e) => LoadUserControl(new ImageControl());
+    private void TSB_Code_Click(object sender, EventArgs e) => LoadUserControl(new CodeControl());
 
     private void ModelChanged(object sender, EventArgs e)
     {
@@ -88,5 +45,22 @@ public partial class MainForm : Form
 
         Globals.SelectModelName = model.Name;
         Globals.SelectModelPath = model.Path;
+
+        // Reload the current UserControl
+        if (currentUserControl is not null)
+            LoadUserControl((CustomControl)(Activator.CreateInstance(currentUserControl.GetType()) ?? new ChatControl()));
+    }
+
+    private void LoadUserControl(CustomControl userControl)
+    {
+        Panel_Main.Controls.Clear();
+        userControl.Dock = DockStyle.Fill;
+        Panel_Main.Controls.Add(userControl);
+
+        // Set The Accept Button
+        AcceptButton = ((ChatControl)Panel_Main.Controls[0]).DefaultButton;
+
+        // Get A Reference To The Current User Control
+        currentUserControl = userControl;
     }
 }

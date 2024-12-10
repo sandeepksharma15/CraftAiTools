@@ -50,6 +50,7 @@ partial class MainForm
         // 
         // TSB_Chat
         // 
+        TSB_Chat.BackColor = SystemColors.ButtonFace;
         TSB_Chat.DisplayStyle = ToolStripItemDisplayStyle.Text;
         TSB_Chat.Font = new Font("Roboto", 10F);
         TSB_Chat.ImageTransparentColor = Color.Magenta;
@@ -62,6 +63,7 @@ partial class MainForm
         // 
         // TSB_Image
         // 
+        TSB_Image.BackColor = SystemColors.ButtonFace;
         TSB_Image.DisplayStyle = ToolStripItemDisplayStyle.Text;
         TSB_Image.Font = new Font("Roboto", 10F);
         TSB_Image.ImageTransparentColor = Color.Magenta;
@@ -74,6 +76,7 @@ partial class MainForm
         // 
         // TSB_Code
         // 
+        TSB_Code.BackColor = SystemColors.ButtonFace;
         TSB_Code.DisplayStyle = ToolStripItemDisplayStyle.Text;
         TSB_Code.Font = new Font("Roboto", 10F);
         TSB_Code.ImageTransparentColor = Color.Magenta;

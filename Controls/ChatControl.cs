@@ -3,7 +3,7 @@ using LLama.Common;
 
 namespace CraftAiTools.Controls;
 
-public partial class ChatControl : UserControl
+public partial class ChatControl : CustomControl
 {
     private InteractiveExecutor? executor;
     private ChatHistory? chatHistory;
@@ -16,11 +16,47 @@ public partial class ChatControl : UserControl
     {
         InitializeComponent();
 
+        // Set Default Button
+        DefaultButton = btnSend;
+
+        SetupResize();
+
+        SetupChatEnvironment();
+    }
+
+    private void SetupResize()
+    {
+        Resize += (s, e) =>
+        {
+            txtLog.Height = txtUserInput.Top - txtLog.Top - 10;
+            txtUserInput.Width = ClientSize.Width - btnSend.Width - 6; // Adjust dynamically
+        };
+    }
+    private async void BtnSend_Click(object sender, EventArgs e)
+    {
+        txtLog.Text += txtUserInput.Text + Environment.NewLine;
+
+        txtLog.Text += "Bob: ";
+
+        await foreach (var text in session!.ChatAsync(new ChatHistory.Message(AuthorRole.User,
+            txtUserInput.Text), inferenceParams))
+        {
+            txtLog.Text += text;
+        }
+
+        txtUserInput.Text = "";
+
+        txtLog.Text += Environment.NewLine + "User: ";
+    }
+
+    private void SetupChatEnvironment()
+    {
         btnSend.Enabled = false;
 
         if (Globals.SelectModelPath is null)
         {
-            MessageBox.Show("Please select a model first.");
+            MessageBox.Show("Please select a model to get started...", "Error!", 
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
 
@@ -51,23 +87,8 @@ public partial class ChatControl : UserControl
             AntiPrompts = ["User:"] // Stop generation once antiprompts appear.
         };
 
-        txtLog.Text += "The chat session has started...\nUser: ";
+        txtLog.Text += "The chat session has started..." + Environment.NewLine + Environment.NewLine + "User: ";
 
         btnSend.Enabled = session is not null;
-    }
-
-    private async void btnSend_Click(object sender, EventArgs e)
-    {
-        txtLog.Text += txtUserInput.Text + "\n";
-
-        txtLog.Text += "Bob: ";
-
-        await foreach (var text in session!.ChatAsync(new ChatHistory.Message(AuthorRole.User, 
-            txtUserInput.Text), inferenceParams))
-        {
-            txtLog.Text += text;
-        }
-
-        txtLog.Text += "\nUser: ";
     }
 }
